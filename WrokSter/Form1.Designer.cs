@@ -34,20 +34,20 @@
             // 
             // radialgauge2
             // 
-            this.radialgauge2.Location = new System.Drawing.Point(168, 65);
+            this.radialgauge2.Location = new System.Drawing.Point(166, 65);
             this.radialgauge2.Name = "radialgauge2";
-            this.radialgauge2.ProgressValue = 74;
-            this.radialgauge2.Size = new System.Drawing.Size(307, 242);
+            this.radialgauge2.Size = new System.Drawing.Size(369, 317);
             this.radialgauge2.TabIndex = 1;
             this.radialgauge2.Text = "radialgauge2";
+            this.radialgauge2.Value = 100;
             // 
             // radialgauge1
             // 
             this.radialgauge1.Location = new System.Drawing.Point(0, 0);
             this.radialgauge1.Name = "radialgauge1";
-            this.radialgauge1.ProgressValue = 74;
             this.radialgauge1.Size = new System.Drawing.Size(0, 0);
             this.radialgauge1.TabIndex = 0;
+            this.radialgauge1.Value = 100;
             // 
             // Form1
             // 
