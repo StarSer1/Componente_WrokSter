@@ -28,23 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.radialgauge2 = new Radialgauge.Radialgauge();
             this.radialgauge1 = new Radialgauge.Radialgauge();
             this.SuspendLayout();
             // 
+            // radialgauge2
+            // 
+            this.radialgauge2.Location = new System.Drawing.Point(168, 65);
+            this.radialgauge2.Name = "radialgauge2";
+            this.radialgauge2.ProgressValue = 74;
+            this.radialgauge2.Size = new System.Drawing.Size(307, 242);
+            this.radialgauge2.TabIndex = 1;
+            this.radialgauge2.Text = "radialgauge2";
+            // 
             // radialgauge1
             // 
-            this.radialgauge1.Location = new System.Drawing.Point(260, 109);
+            this.radialgauge1.Location = new System.Drawing.Point(0, 0);
             this.radialgauge1.Name = "radialgauge1";
-            this.radialgauge1.ProgressValue = 0;
-            this.radialgauge1.Size = new System.Drawing.Size(217, 182);
+            this.radialgauge1.ProgressValue = 74;
+            this.radialgauge1.Size = new System.Drawing.Size(0, 0);
             this.radialgauge1.TabIndex = 0;
-            this.radialgauge1.Text = "radialgauge1";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(714, 408);
+            this.Controls.Add(this.radialgauge2);
             this.Controls.Add(this.radialgauge1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -55,6 +65,7 @@
         #endregion
 
         private Radialgauge.Radialgauge radialgauge1;
+        private Radialgauge.Radialgauge radialgauge2;
     }
 }
 

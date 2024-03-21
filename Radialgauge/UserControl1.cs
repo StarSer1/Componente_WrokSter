@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 using System.Timers;
-
 
 namespace Radialgauge
 {
-    public partial class Radialgauge:Control
+    public partial class Radialgauge : Control
     {
         private int _progressValue = 0;
         private System.Timers.Timer animationTimer;
@@ -49,10 +43,10 @@ namespace Radialgauge
             // Dibujar el arco de la ProgressBar
             int progressAngle = (int)(_progressValue / 100.0 * 180); // Calcula el ángulo basado en el valor de progreso
             Rectangle rect = new Rectangle(0, 0, Width, Height);
-            e.Graphics.FillPie(Brushes.Blue, rect, 0, -progressAngle); // Iniciamos el arco desde la parte superior (ángulo 0)
+            e.Graphics.FillPie(Brushes.Blue, rect, 180, progressAngle); // Iniciamos el arco desde la parte inferior (ángulo 180)
 
             // Dibujar el borde del arco
-            e.Graphics.DrawArc(Pens.Black, rect, 0, -180);
+            e.Graphics.DrawArc(Pens.Black, rect, 180, 180);
         }
 
         private void AnimationTimerElapsed(object sender, ElapsedEventArgs e)
