@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Timers;
+using System.Drawing.Drawing2D;
 
 namespace Radialgauge
 {
@@ -27,10 +28,22 @@ namespace Radialgauge
         private int _GrosorDeLineaCentral = 5; 
         private Color _ColorDeLineaCentral = Color.MediumOrchid;
         private Color _ColorDeFondo = Color.Black;
+        private DashStyle _EstiloDelPerimetro = DashStyle.Dash;
 
         [Browsable(true)]
+        [DefaultValue(DashStyle.Dash)]
+        public DashStyle EstiloDelPerimetro
+        {
+            get { return _EstiloDelPerimetro; }
+            set
+            {
+                _EstiloDelPerimetro = value;
+                Invalidate();
+            }
+        }
+        [Browsable(true)]
         [DefaultValue(typeof(Color), "Transparent")]
-        public Color AngleFillColor
+        public Color ColorDeFondo
         {
             get { return _ColorDeFondo; }
             set
@@ -78,7 +91,7 @@ namespace Radialgauge
 
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Black")]
-        public Color AngleLineColor
+        public Color ColorDelPerimetro
         {
             get { return _ColorDelPerimetro; }
             set
@@ -90,7 +103,7 @@ namespace Radialgauge
 
         [Browsable(true)]
         [DefaultValue(1)]
-        public int AngleLineThickness
+        public int AnchoDelPerimetro
         {
             get { return _AnchoDelPerimetro; }
             set
@@ -102,7 +115,7 @@ namespace Radialgauge
 
         [Browsable(true)]
         [DefaultValue(1)]
-        public int CentralLineThickness
+        public int GrosorDeLineaCentral
         {
             get { return _GrosorDeLineaCentral; }
             set
@@ -136,7 +149,7 @@ namespace Radialgauge
 
         [Browsable(true)]
         [DefaultValue(3)]
-        public int CentralPointRadius
+        public int PuntoCentral
         {
             get { return _PuntoCentral; }
             set
@@ -148,7 +161,7 @@ namespace Radialgauge
 
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Black")]
-        public Color CentralPointColor
+        public Color ColorDelPuntoCentral
         {
             get { return _ColorDelPuntoCentral; }
             set
@@ -162,7 +175,7 @@ namespace Radialgauge
 
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Black")]
-        public Color CentralLineColor
+        public Color ColorDeLineaCentral
         {
             get { return _ColorDeLineaCentral; }
             set
@@ -193,20 +206,21 @@ namespace Radialgauge
             Height = nuevoTamaño;
         }
 
-        //Metodo para dibujar
+        // Método para dibujar
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
             PointF inicio = new PointF(Width / 2, Height / 2);
             Rectangle rectangulo = new Rectangle(0, 0, Width - 1, Height - 1);
 
-            using (SolidBrush angleFillBrush = new SolidBrush(AngleFillColor))
+            using (SolidBrush angleFillBrush = new SolidBrush(ColorDeFondo))
             {
                 e.Graphics.FillPie(angleFillBrush, rectangulo, 180, 180);
             }
 
-            using (Pen angleLinePen = new Pen(AngleLineColor, AngleLineThickness))
+            using (Pen angleLinePen = new Pen(ColorDelPerimetro, AnchoDelPerimetro))
             {
+                angleLinePen.DashStyle = EstiloDelPerimetro; 
                 e.Graphics.DrawArc(angleLinePen, rectangulo, 180, 180);
             }
 
@@ -214,18 +228,18 @@ namespace Radialgauge
 
             PointF fina = ObtnerPuntoEnElCirculo(Width / 2, Height / 2, Width / 2, angulo);
 
-            using (Pen centralLinePen = new Pen(CentralLineColor, CentralLineThickness))
+            using (Pen centralLinePen = new Pen(ColorDeLineaCentral, GrosorDeLineaCentral))
             {
                 e.Graphics.DrawLine(centralLinePen, inicio, fina);
             }
 
-            Rectangle puntocentreal = new Rectangle((int)inicio.X - CentralPointRadius, (int)inicio.Y - CentralPointRadius, CentralPointRadius * 2, CentralPointRadius * 2);
-            using (SolidBrush centralPointBrush = new SolidBrush(CentralPointColor))
+            Rectangle puntocentreal = new Rectangle((int)inicio.X - PuntoCentral, (int)inicio.Y - PuntoCentral, PuntoCentral * 2, PuntoCentral * 2);
+            using (SolidBrush centralPointBrush = new SolidBrush(ColorDelPuntoCentral))
             {
                 e.Graphics.FillEllipse(centralPointBrush, puntocentreal);
             }
 
-            e.Graphics.DrawEllipse(new Pen(CentralPointColor, CentralLineThickness), inicio.X - CentralPointRadius, inicio.Y - CentralPointRadius, CentralPointRadius * 2, CentralPointRadius * 2);
+            e.Graphics.DrawEllipse(new Pen(ColorDelPuntoCentral, GrosorDeLineaCentral), inicio.X - PuntoCentral, inicio.Y - PuntoCentral, PuntoCentral * 2, PuntoCentral * 2);
 
             using (SolidBrush pincel = new SolidBrush(TextColor))
             {
@@ -239,7 +253,7 @@ namespace Radialgauge
             }
             string valorDeTexto = _value.ToString();
             SizeF ValorDeTamaño = e.Graphics.MeasureString(valorDeTexto, Font);
-            PointF ValorDeUbicacionDelTexto = new PointF(inicio.X - ValorDeTamaño.Width / 2, inicio.Y + CentralPointRadius + 5);
+            PointF ValorDeUbicacionDelTexto = new PointF(inicio.X - ValorDeTamaño.Width / 2, inicio.Y + PuntoCentral + 5);
             using (SolidBrush valueTextBrush = new SolidBrush(TextColor))
             {
                 e.Graphics.DrawString(valorDeTexto, Font, valueTextBrush, ValorDeUbicacionDelTexto);

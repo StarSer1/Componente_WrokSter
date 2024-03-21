@@ -34,31 +34,33 @@
             // 
             // radialgauge1
             // 
-            this.radialgauge1.AngleFillColor = System.Drawing.Color.Black;
-            this.radialgauge1.AngleLineColor = System.Drawing.Color.RoyalBlue;
-            this.radialgauge1.AngleLineThickness = 5;
-            this.radialgauge1.CentralLineColor = System.Drawing.Color.MediumOrchid;
-            this.radialgauge1.CentralLineThickness = 5;
-            this.radialgauge1.CentralPointColor = System.Drawing.Color.MediumSlateBlue;
-            this.radialgauge1.CentralPointRadius = 4;
+            this.radialgauge1.AnchoDelPerimetro = 5;
+            this.radialgauge1.ColorDeFondo = System.Drawing.Color.Black;
+            this.radialgauge1.ColorDeLineaCentral = System.Drawing.Color.MediumOrchid;
+            this.radialgauge1.ColorDelPerimetro = System.Drawing.Color.RoyalBlue;
+            this.radialgauge1.ColorDelPuntoCentral = System.Drawing.Color.MediumSlateBlue;
+            this.radialgauge1.GrosorDeLineaCentral = 5;
             this.radialgauge1.Location = new System.Drawing.Point(0, 0);
             this.radialgauge1.Name = "radialgauge1";
+            this.radialgauge1.PuntoCentral = 4;
             this.radialgauge1.Size = new System.Drawing.Size(0, 0);
             this.radialgauge1.TabIndex = 0;
             this.radialgauge1.Value = 88;
             // 
             // radialgauge2
             // 
-            this.radialgauge2.AngleFillColor = System.Drawing.Color.Black;
-            this.radialgauge2.AngleLineColor = System.Drawing.Color.RoyalBlue;
-            this.radialgauge2.AngleLineThickness = 5;
-            this.radialgauge2.CentralLineColor = System.Drawing.Color.MediumOrchid;
-            this.radialgauge2.CentralLineThickness = 5;
-            this.radialgauge2.CentralPointColor = System.Drawing.Color.MediumSlateBlue;
-            this.radialgauge2.CentralPointRadius = 4;
-            this.radialgauge2.Location = new System.Drawing.Point(185, 78);
+            this.radialgauge2.AnchoDelPerimetro = 5;
+            this.radialgauge2.BackColor = System.Drawing.SystemColors.Control;
+            this.radialgauge2.ColorDeFondo = System.Drawing.Color.Black;
+            this.radialgauge2.ColorDeLineaCentral = System.Drawing.Color.MediumOrchid;
+            this.radialgauge2.ColorDelPerimetro = System.Drawing.Color.RoyalBlue;
+            this.radialgauge2.ColorDelPuntoCentral = System.Drawing.Color.MediumSlateBlue;
+            this.radialgauge2.EstiloDelPerimetro = System.Drawing.Drawing2D.DashStyle.Solid;
+            this.radialgauge2.GrosorDeLineaCentral = 5;
+            this.radialgauge2.Location = new System.Drawing.Point(129, 63);
             this.radialgauge2.Name = "radialgauge2";
-            this.radialgauge2.Size = new System.Drawing.Size(385, 385);
+            this.radialgauge2.PuntoCentral = 4;
+            this.radialgauge2.Size = new System.Drawing.Size(453, 453);
             this.radialgauge2.TabIndex = 1;
             this.radialgauge2.Text = "radialgauge2";
             this.radialgauge2.Value = 100;
