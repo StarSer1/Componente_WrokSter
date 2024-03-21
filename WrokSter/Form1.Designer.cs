@@ -28,8 +28,23 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.radialgauge2 = new Radialgauge.Radialgauge();
             this.radialgauge1 = new Radialgauge.Radialgauge();
             this.SuspendLayout();
+            // 
+            // radialgauge2
+            // 
+            this.radialgauge2.AngleFillColor = System.Drawing.Color.Black;
+            this.radialgauge2.AngleLineColor = System.Drawing.Color.RoyalBlue;
+            this.radialgauge2.AngleLineThickness = 5;
+            this.radialgauge2.CentralLineColor = System.Drawing.Color.MediumOrchid;
+            this.radialgauge2.CentralLineThickness = 5;
+            this.radialgauge2.CentralPointColor = System.Drawing.Color.MediumSlateBlue;
+            this.radialgauge2.CentralPointRadius = 4;
+            this.radialgauge2.Location = new System.Drawing.Point(175, 95);
+            this.radialgauge2.Name = "radialgauge2";
+            this.radialgauge2.Size = new System.Drawing.Size(327, 327);
+            this.radialgauge2.TabIndex = 1;
             // 
             // radialgauge1
             // 
@@ -44,13 +59,14 @@
             this.radialgauge1.Name = "radialgauge1";
             this.radialgauge1.Size = new System.Drawing.Size(0, 0);
             this.radialgauge1.TabIndex = 0;
-            this.radialgauge1.Value = 100;
+            this.radialgauge1.Value = 88;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(714, 408);
+            this.Controls.Add(this.radialgauge2);
             this.Controls.Add(this.radialgauge1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -61,6 +77,7 @@
         #endregion
 
         private Radialgauge.Radialgauge radialgauge1;
+        private Radialgauge.Radialgauge radialgauge2;
     }
 }
 

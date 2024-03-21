@@ -18,10 +18,9 @@ namespace Radialgauge
         private int animationInterval = 50; // Intervalo para la animación de llenado (en milisegundos)
 
         // Nuevas propiedades decorativas
-        private Color _lineColor = Color.Blue;
         private Color _angleLineColor = Color.RoyalBlue; // Color predeterminado de la línea del perímetro del ángulo
         private int _angleLineThickness = 5; // Grosor predeterminado de la línea del perímetro del ángulo
-        private Font _textFont = SystemFonts.DefaultFont;
+        private Font _textFont = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Bold);
         private Color _textColor = Color.Black;
         private int _centralPointRadius = 4; // Radio predeterminado del punto central
         private Color _centralPointColor = Color.MediumSlateBlue; // Color predeterminado del punto central
@@ -79,18 +78,6 @@ namespace Radialgauge
         }
 
         [Browsable(true)]
-        [DefaultValue(typeof(Color), "Blue")]
-        public Color LineColor
-        {
-            get { return _lineColor; }
-            set
-            {
-                _lineColor = value;
-                Invalidate();
-            }
-        }
-
-        [Browsable(true)]
         [DefaultValue(typeof(Color), "Black")]
         public Color AngleLineColor
         {
@@ -138,6 +125,16 @@ namespace Radialgauge
             }
         }
 
+        public override Font Font
+        {
+            get { return _textFont; }
+            set
+            {
+                _textFont = value;
+                Invalidate();
+            }
+        }
+
         [Browsable(true)]
         [DefaultValue(3)]
         public int CentralPointRadius
@@ -181,7 +178,7 @@ namespace Radialgauge
         {
             // Establecer estilos para el control
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
-            UpdateStyles();
+            UpdateStyles();         
 
             // Inicializar el temporizador de animación
             animationTimer = new System.Timers.Timer(animationInterval);
@@ -262,8 +259,6 @@ namespace Radialgauge
                 e.Graphics.DrawString(valueText, Font, valueTextBrush, valueTextLocation);
             }
         }
-
-
 
         private PointF GetPointOnCircle(float centerX, float centerY, float radius, float angleDegrees)
         {
