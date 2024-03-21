@@ -27,7 +27,20 @@ namespace Radialgauge
         private Color _centralPointColor = Color.Black; // Color predeterminado del punto central
         private int _centralLineThickness = 1; // Grosor predeterminado de la línea central
         private Color _centralLineColor = Color.Black;
+        // Nueva propiedad para el color del área dentro del perímetro del ángulo
+        private Color _angleFillColor = Color.Transparent;
 
+        [Browsable(true)]
+        [DefaultValue(typeof(Color), "Transparent")]
+        public Color AngleFillColor
+        {
+            get { return _angleFillColor; }
+            set
+            {
+                _angleFillColor = value;
+                Invalidate();
+            }
+        }
 
         [Browsable(true)]
         [DefaultValue(0)]
@@ -173,8 +186,18 @@ namespace Radialgauge
             // Inicializar el temporizador de animación
             animationTimer = new System.Timers.Timer(animationInterval);
             animationTimer.Elapsed += AnimationTimerElapsed;
-        }
 
+            // Agregar el controlador de eventos para el cambio de tamaño
+            this.SizeChanged += Radialgauge_SizeChanged;
+        }
+        // Controlador de eventos para el cambio de tamaño
+        private void Radialgauge_SizeChanged(object sender, EventArgs e)
+        {
+            // Asegurar que el ancho y el alto sean iguales para mantener un tamaño cuadrado
+            int newSize = Math.Max(Width, Height);
+            Width = newSize;
+            Height = newSize;
+        }
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
@@ -184,6 +207,11 @@ namespace Radialgauge
 
             // Dibujar el arco exterior de la ProgressBar (perímetro curvo)
             Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1); // Ajustar el rectángulo para que la línea del perímetro no se corte
+
+            using (SolidBrush angleFillBrush = new SolidBrush(AngleFillColor))
+            {
+                e.Graphics.FillPie(angleFillBrush, rect, 180, 180);
+            }
 
             // Dibujar la línea del perímetro del ángulo
             using (Pen angleLinePen = new Pen(AngleLineColor, AngleLineThickness))
@@ -224,6 +252,7 @@ namespace Radialgauge
                 SizeF textSize = e.Graphics.MeasureString(MaxValue.ToString(), Font);
                 e.Graphics.DrawString(MaxValue.ToString(), Font, textBrush, Width - textSize.Width, Height / 2);
             }
+
         }
 
 
