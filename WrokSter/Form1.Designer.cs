@@ -50,7 +50,7 @@
             this.radialgauge2.Size = new System.Drawing.Size(412, 412);
             this.radialgauge2.TabIndex = 1;
             this.radialgauge2.Text = "radialgauge2";
-            this.radialgauge2.Value = 80;
+            this.radialgauge2.Value = 50;
             // 
             // radialgauge1
             // 

@@ -253,7 +253,16 @@ namespace Radialgauge
                 e.Graphics.DrawString(MaxValue.ToString(), Font, textBrush, Width - textSize.Width, Height / 2);
             }
 
+            // Dibujar el texto debajo del punto central
+            string valueText = _value.ToString();
+            SizeF valueTextSize = e.Graphics.MeasureString(valueText, Font);
+            PointF valueTextLocation = new PointF(start.X - valueTextSize.Width / 2, start.Y + CentralPointRadius + 5); // 5 es el espacio entre el punto central y el texto
+            using (SolidBrush valueTextBrush = new SolidBrush(TextColor))
+            {
+                e.Graphics.DrawString(valueText, Font, valueTextBrush, valueTextLocation);
+            }
         }
+
 
 
         private PointF GetPointOnCircle(float centerX, float centerY, float radius, float angleDegrees)
