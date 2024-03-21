@@ -17,6 +17,10 @@ namespace Radialgauge
         private int animationIncrement = 2; // Incremento para la animación de llenado
         private int animationInterval = 50; // Intervalo para la animación de llenado (en milisegundos)
 
+        // Nuevas propiedades decorativas
+        private Color _lineColor = Color.Blue;
+        private Color _textColor = Color.Black;
+
         [Browsable(true)]
         [DefaultValue(0)]
         public int Value
@@ -53,6 +57,31 @@ namespace Radialgauge
             }
         }
 
+        [Browsable(true)]
+        [DefaultValue(typeof(Color), "Blue")]
+        public Color LineColor
+        {
+            get { return _lineColor; }
+            set
+            {
+                _lineColor = value;
+                Invalidate();
+            }
+        }    
+
+        [Browsable(true)]
+        [DefaultValue(typeof(Color), "Black")]
+        public Color TextColor
+        {
+            get { return _textColor; }
+            set
+            {
+                _textColor = value;
+                Invalidate();
+            }
+        }
+
+
         public Radialgauge()
         {
             // Establecer estilos para el control
@@ -80,18 +109,20 @@ namespace Radialgauge
             PointF end = GetPointOnCircle(Width / 2, Height / 2, Width / 2, angle);
 
             // Dibujar la línea central
-            e.Graphics.DrawLine(Pens.Blue, start, end);
+            e.Graphics.DrawLine(new Pen(LineColor), start, end);
 
-            // Dibujar el texto "0" en el extremo izquierdo
-            SizeF textSize = e.Graphics.MeasureString("0", Font);
-            PointF textPositionLeft = new PointF(0, Height / 2 - textSize.Height / 2);
-            e.Graphics.DrawString("0", Font, Brushes.Black, textPositionLeft);
+            // Dibujar el texto en el extremo izquierdo
+            using (SolidBrush textBrush = new SolidBrush(TextColor))
+            {
+                e.Graphics.DrawString(MinValue.ToString(), Font, textBrush, 0, Height / 2);
+            }
 
-            // Obtener el texto para el extremo derecho basado en el valor máximo
-            string maxValueText = MaxValue.ToString();
-            textSize = e.Graphics.MeasureString(maxValueText, Font);
-            PointF textPositionRight = new PointF(Width - textSize.Width, Height / 2 - textSize.Height / 2);
-            e.Graphics.DrawString(maxValueText, Font, Brushes.Black, textPositionRight);
+            // Dibujar el texto en el extremo derecho
+            using (SolidBrush textBrush = new SolidBrush(TextColor))
+            {
+                SizeF textSize = e.Graphics.MeasureString(MaxValue.ToString(), Font);
+                e.Graphics.DrawString(MaxValue.ToString(), Font, textBrush, Width - textSize.Width, Height / 2);
+            }
         }
 
 
