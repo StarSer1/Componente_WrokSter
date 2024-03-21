@@ -14,29 +14,28 @@ namespace Radialgauge
         private int _animationStartValue = 0;
         private int _animationEndValue = 0;
         private System.Timers.Timer animationTimer;
-        private int animationIncrement = 2; // Incremento para la animación de llenado
-        private int animationInterval = 50; // Intervalo para la animación de llenado (en milisegundos)
+        private int IncrementoDeAnimacion = 2; 
+        private int IntervaloDeAnimacion = 50; // Intervalo para la animación de llenado (en milisegundos)
 
-        // Nuevas propiedades decorativas
-        private Color _angleLineColor = Color.RoyalBlue; // Color predeterminado de la línea del perímetro del ángulo
-        private int _angleLineThickness = 5; // Grosor predeterminado de la línea del perímetro del ángulo
+        //Propiedades decorativas
+        private Color _ColorDelPerimetro = Color.RoyalBlue; 
+        private int _AnchoDelPerimetro = 5; 
         private Font _textFont = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Bold);
         private Color _textColor = Color.Black;
-        private int _centralPointRadius = 4; // Radio predeterminado del punto central
-        private Color _centralPointColor = Color.MediumSlateBlue; // Color predeterminado del punto central
-        private int _centralLineThickness = 5; // Grosor predeterminado de la línea central
-        private Color _centralLineColor = Color.MediumOrchid;
-        // Nueva propiedad para el color del área dentro del perímetro del ángulo
-        private Color _angleFillColor = Color.Black;
+        private int _PuntoCentral = 4; 
+        private Color _ColorDelPuntoCentral = Color.MediumSlateBlue;
+        private int _GrosorDeLineaCentral = 5; 
+        private Color _ColorDeLineaCentral = Color.MediumOrchid;
+        private Color _ColorDeFondo = Color.Black;
 
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Transparent")]
         public Color AngleFillColor
         {
-            get { return _angleFillColor; }
+            get { return _ColorDeFondo; }
             set
             {
-                _angleFillColor = value;
+                _ColorDeFondo = value;
                 Invalidate();
             }
         }
@@ -49,7 +48,7 @@ namespace Radialgauge
             set
             {
                 _value = Math.Min(Math.Max(value, MinValue), MaxValue);
-                StartAnimation();
+                IniciarAnimacion();
             }
         }
 
@@ -61,7 +60,7 @@ namespace Radialgauge
             set
             {
                 _minValue = value;
-                Invalidate(); // Redibujar el control cuando el valor cambia
+                Invalidate(); 
             }
         }
 
@@ -73,7 +72,7 @@ namespace Radialgauge
             set
             {
                 _maxValue = value;
-                Invalidate(); // Redibujar el control cuando el valor cambia
+                Invalidate(); 
             }
         }
 
@@ -81,10 +80,10 @@ namespace Radialgauge
         [DefaultValue(typeof(Color), "Black")]
         public Color AngleLineColor
         {
-            get { return _angleLineColor; }
+            get { return _ColorDelPerimetro; }
             set
             {
-                _angleLineColor = value;
+                _ColorDelPerimetro = value;
                 Invalidate();
             }
         }
@@ -93,10 +92,10 @@ namespace Radialgauge
         [DefaultValue(1)]
         public int AngleLineThickness
         {
-            get { return _angleLineThickness; }
+            get { return _AnchoDelPerimetro; }
             set
             {
-                _angleLineThickness = value;
+                _AnchoDelPerimetro = value;
                 Invalidate();
             }
         }
@@ -105,10 +104,10 @@ namespace Radialgauge
         [DefaultValue(1)]
         public int CentralLineThickness
         {
-            get { return _centralLineThickness; }
+            get { return _GrosorDeLineaCentral; }
             set
             {
-                _centralLineThickness = value;
+                _GrosorDeLineaCentral = value;
                 Invalidate();
             }
         }
@@ -139,10 +138,10 @@ namespace Radialgauge
         [DefaultValue(3)]
         public int CentralPointRadius
         {
-            get { return _centralPointRadius; }
+            get { return _PuntoCentral; }
             set
             {
-                _centralPointRadius = value;
+                _PuntoCentral = value;
                 Invalidate();
             }
         }
@@ -151,10 +150,10 @@ namespace Radialgauge
         [DefaultValue(typeof(Color), "Black")]
         public Color CentralPointColor
         {
-            get { return _centralPointColor; }
+            get { return _ColorDelPuntoCentral; }
             set
             {
-                _centralPointColor = value;
+                _ColorDelPuntoCentral = value;
                 Invalidate();
             }
         }
@@ -165,139 +164,120 @@ namespace Radialgauge
         [DefaultValue(typeof(Color), "Black")]
         public Color CentralLineColor
         {
-            get { return _centralLineColor; }
+            get { return _ColorDeLineaCentral; }
             set
             {
-                _centralLineColor = value;
+                _ColorDeLineaCentral = value;
                 Invalidate();
             }
         }
 
 
+        //Actualizacion del Radialgauge
         public Radialgauge()
         {
-            // Establecer estilos para el control
             SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
-            UpdateStyles();         
+            UpdateStyles();
 
-            // Inicializar el temporizador de animación
-            animationTimer = new System.Timers.Timer(animationInterval);
-            animationTimer.Elapsed += AnimationTimerElapsed;
+            animationTimer = new System.Timers.Timer(IntervaloDeAnimacion);
+            animationTimer.Elapsed += TemporizadorDeAnimacion;
 
-            // Agregar el controlador de eventos para el cambio de tamaño
-            this.SizeChanged += Radialgauge_SizeChanged;
+            this.SizeChanged += Radialgauge_CambioDeTamaño;
         }
+
         // Controlador de eventos para el cambio de tamaño
-        private void Radialgauge_SizeChanged(object sender, EventArgs e)
+        private void Radialgauge_CambioDeTamaño(object sender, EventArgs e)
         {
-            // Asegurar que el ancho y el alto sean iguales para mantener un tamaño cuadrado
-            int newSize = Math.Max(Width, Height);
-            Width = newSize;
-            Height = newSize;
+            int nuevoTamaño = Math.Max(Width, Height);
+            Width = nuevoTamaño;
+            Height = nuevoTamaño;
         }
+
+        //Metodo para dibujar
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
-
-            // Calcular el punto de inicio de la línea central
-            PointF start = new PointF(Width / 2, Height / 2);
-
-            // Dibujar el arco exterior de la ProgressBar (perímetro curvo)
-            Rectangle rect = new Rectangle(0, 0, Width - 1, Height - 1); // Ajustar el rectángulo para que la línea del perímetro no se corte
+            PointF inicio = new PointF(Width / 2, Height / 2);
+            Rectangle rectangulo = new Rectangle(0, 0, Width - 1, Height - 1);
 
             using (SolidBrush angleFillBrush = new SolidBrush(AngleFillColor))
             {
-                e.Graphics.FillPie(angleFillBrush, rect, 180, 180);
+                e.Graphics.FillPie(angleFillBrush, rectangulo, 180, 180);
             }
 
-            // Dibujar la línea del perímetro del ángulo
             using (Pen angleLinePen = new Pen(AngleLineColor, AngleLineThickness))
             {
-                e.Graphics.DrawArc(angleLinePen, rect, 180, 180);
+                e.Graphics.DrawArc(angleLinePen, rectangulo, 180, 180);
             }
 
-            // Calcular el ángulo de la línea central en función del valor actual
-            float angle = 180 - ((float)(_value - MinValue) / (MaxValue - MinValue) * 180);
+            float angulo = 180 - ((float)(_value - MinValue) / (MaxValue - MinValue) * 180);
 
-            // Calcular los puntos de inicio y fin de la línea central
-            PointF end = GetPointOnCircle(Width / 2, Height / 2, Width / 2, angle);
+            PointF fina = ObtnerPuntoEnElCirculo(Width / 2, Height / 2, Width / 2, angulo);
 
-            // Dibujar la línea central
             using (Pen centralLinePen = new Pen(CentralLineColor, CentralLineThickness))
             {
-                e.Graphics.DrawLine(centralLinePen, start, end);
+                e.Graphics.DrawLine(centralLinePen, inicio, fina);
             }
 
-            Rectangle centralPointRect = new Rectangle((int)start.X - CentralPointRadius, (int)start.Y - CentralPointRadius, CentralPointRadius * 2, CentralPointRadius * 2);
+            Rectangle puntocentreal = new Rectangle((int)inicio.X - CentralPointRadius, (int)inicio.Y - CentralPointRadius, CentralPointRadius * 2, CentralPointRadius * 2);
             using (SolidBrush centralPointBrush = new SolidBrush(CentralPointColor))
             {
-                e.Graphics.FillEllipse(centralPointBrush, centralPointRect);
+                e.Graphics.FillEllipse(centralPointBrush, puntocentreal);
             }
 
-            // Dibujar el círculo central
-            e.Graphics.DrawEllipse(new Pen(CentralPointColor, CentralLineThickness), start.X - CentralPointRadius, start.Y - CentralPointRadius, CentralPointRadius * 2, CentralPointRadius * 2);
+            e.Graphics.DrawEllipse(new Pen(CentralPointColor, CentralLineThickness), inicio.X - CentralPointRadius, inicio.Y - CentralPointRadius, CentralPointRadius * 2, CentralPointRadius * 2);
 
-            // Dibujar el texto en el extremo izquierdo
-            using (SolidBrush textBrush = new SolidBrush(TextColor))
+            using (SolidBrush pincel = new SolidBrush(TextColor))
             {
-                e.Graphics.DrawString(MinValue.ToString(), Font, textBrush, 0, Height / 2);
+                e.Graphics.DrawString(MinValue.ToString(), Font, pincel, 0, Height / 2);
             }
 
-            // Dibujar el texto en el extremo derecho
-            using (SolidBrush textBrush = new SolidBrush(TextColor))
+            using (SolidBrush pincel = new SolidBrush(TextColor))
             {
                 SizeF textSize = e.Graphics.MeasureString(MaxValue.ToString(), Font);
-                e.Graphics.DrawString(MaxValue.ToString(), Font, textBrush, Width - textSize.Width, Height / 2);
+                e.Graphics.DrawString(MaxValue.ToString(), Font, pincel, Width - textSize.Width, Height / 2);
             }
-
-            // Dibujar el texto debajo del punto central
-            string valueText = _value.ToString();
-            SizeF valueTextSize = e.Graphics.MeasureString(valueText, Font);
-            PointF valueTextLocation = new PointF(start.X - valueTextSize.Width / 2, start.Y + CentralPointRadius + 5); // 5 es el espacio entre el punto central y el texto
+            string valorDeTexto = _value.ToString();
+            SizeF ValorDeTamaño = e.Graphics.MeasureString(valorDeTexto, Font);
+            PointF ValorDeUbicacionDelTexto = new PointF(inicio.X - ValorDeTamaño.Width / 2, inicio.Y + CentralPointRadius + 5);
             using (SolidBrush valueTextBrush = new SolidBrush(TextColor))
             {
-                e.Graphics.DrawString(valueText, Font, valueTextBrush, valueTextLocation);
+                e.Graphics.DrawString(valorDeTexto, Font, valueTextBrush, ValorDeUbicacionDelTexto);
             }
         }
 
-        private PointF GetPointOnCircle(float centerX, float centerY, float radius, float angleDegrees)
+        private PointF ObtnerPuntoEnElCirculo(float centroX, float centroY, float radio, float anguloEnGrados)
         {
-            float angleRadians = (float)(angleDegrees * Math.PI / 180.0);
-            float x = centerX + (float)(radius * Math.Cos(angleRadians));
-            float y = centerY - (float)(radius * Math.Sin(angleRadians)); // Restamos para invertir la dirección vertical
+            float angleRadians = (float)(anguloEnGrados * Math.PI / 180.0);
+            float x = centroX + (float)(radio * Math.Cos(angleRadians));
+            float y = centroY - (float)(radio * Math.Sin(angleRadians));
             return new PointF(x, y);
         }
 
-        private void AnimationTimerElapsed(object sender, ElapsedEventArgs e)
+        // Incrementar el valor de progreso para la animación
+        private void TemporizadorDeAnimacion(object sender, ElapsedEventArgs e)
         {
-            // Incrementar el valor de progreso para la animación
             if (_animationStartValue < _animationEndValue)
             {
-                _animationStartValue += animationIncrement;
+                _animationStartValue += IncrementoDeAnimacion;
                 if (_animationStartValue >= _animationEndValue)
                 {
                     _animationStartValue = _animationEndValue;
                     animationTimer.Stop();
                 }
             }
-
-            // Actualizar el valor del control
             _value = _animationStartValue;
-
-            // Redibujar el control
             this.Invoke((MethodInvoker)delegate
             {
                 Invalidate();
             });
         }
 
-        public void StartAnimation()
+        // Establecer los valores de iniciales y finales de la animación
+        public void IniciarAnimacion()
         {
-            // Establecer los valores de inicio y fin de la animación
             _animationStartValue = MinValue;
             _animationEndValue = Value;
-
-            // Iniciar la animación
             animationTimer.Start();
         }
     }

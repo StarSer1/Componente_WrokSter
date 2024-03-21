@@ -28,23 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radialgauge2 = new Radialgauge.Radialgauge();
             this.radialgauge1 = new Radialgauge.Radialgauge();
+            this.radialgauge2 = new Radialgauge.Radialgauge();
             this.SuspendLayout();
-            // 
-            // radialgauge2
-            // 
-            this.radialgauge2.AngleFillColor = System.Drawing.Color.Black;
-            this.radialgauge2.AngleLineColor = System.Drawing.Color.RoyalBlue;
-            this.radialgauge2.AngleLineThickness = 5;
-            this.radialgauge2.CentralLineColor = System.Drawing.Color.MediumOrchid;
-            this.radialgauge2.CentralLineThickness = 5;
-            this.radialgauge2.CentralPointColor = System.Drawing.Color.MediumSlateBlue;
-            this.radialgauge2.CentralPointRadius = 4;
-            this.radialgauge2.Location = new System.Drawing.Point(175, 95);
-            this.radialgauge2.Name = "radialgauge2";
-            this.radialgauge2.Size = new System.Drawing.Size(327, 327);
-            this.radialgauge2.TabIndex = 1;
             // 
             // radialgauge1
             // 
@@ -60,6 +46,22 @@
             this.radialgauge1.Size = new System.Drawing.Size(0, 0);
             this.radialgauge1.TabIndex = 0;
             this.radialgauge1.Value = 88;
+            // 
+            // radialgauge2
+            // 
+            this.radialgauge2.AngleFillColor = System.Drawing.Color.Black;
+            this.radialgauge2.AngleLineColor = System.Drawing.Color.RoyalBlue;
+            this.radialgauge2.AngleLineThickness = 5;
+            this.radialgauge2.CentralLineColor = System.Drawing.Color.MediumOrchid;
+            this.radialgauge2.CentralLineThickness = 5;
+            this.radialgauge2.CentralPointColor = System.Drawing.Color.MediumSlateBlue;
+            this.radialgauge2.CentralPointRadius = 4;
+            this.radialgauge2.Location = new System.Drawing.Point(185, 78);
+            this.radialgauge2.Name = "radialgauge2";
+            this.radialgauge2.Size = new System.Drawing.Size(385, 385);
+            this.radialgauge2.TabIndex = 1;
+            this.radialgauge2.Text = "radialgauge2";
+            this.radialgauge2.Value = 100;
             // 
             // Form1
             // 
