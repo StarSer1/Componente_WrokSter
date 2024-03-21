@@ -28,32 +28,18 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.radialgauge2 = new Radialgauge.Radialgauge();
             this.radialgauge1 = new Radialgauge.Radialgauge();
             this.SuspendLayout();
             // 
-            // radialgauge2
-            // 
-            this.radialgauge2.AngleFillColor = System.Drawing.Color.Black;
-            this.radialgauge2.AngleLineColor = System.Drawing.Color.Gold;
-            this.radialgauge2.AngleLineThickness = 5;
-            this.radialgauge2.BackColor = System.Drawing.SystemColors.Control;
-            this.radialgauge2.CentralLineColor = System.Drawing.Color.Gold;
-            this.radialgauge2.CentralLineThickness = 5;
-            this.radialgauge2.CentralPointColor = System.Drawing.Color.Goldenrod;
-            this.radialgauge2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.radialgauge2.ForeColor = System.Drawing.Color.Black;
-            this.radialgauge2.LineColor = System.Drawing.Color.Black;
-            this.radialgauge2.Location = new System.Drawing.Point(128, 63);
-            this.radialgauge2.MinValue = 30;
-            this.radialgauge2.Name = "radialgauge2";
-            this.radialgauge2.Size = new System.Drawing.Size(412, 412);
-            this.radialgauge2.TabIndex = 1;
-            this.radialgauge2.Text = "radialgauge2";
-            this.radialgauge2.Value = 50;
-            // 
             // radialgauge1
             // 
+            this.radialgauge1.AngleFillColor = System.Drawing.Color.Black;
+            this.radialgauge1.AngleLineColor = System.Drawing.Color.RoyalBlue;
+            this.radialgauge1.AngleLineThickness = 5;
+            this.radialgauge1.CentralLineColor = System.Drawing.Color.MediumOrchid;
+            this.radialgauge1.CentralLineThickness = 5;
+            this.radialgauge1.CentralPointColor = System.Drawing.Color.MediumSlateBlue;
+            this.radialgauge1.CentralPointRadius = 4;
             this.radialgauge1.Location = new System.Drawing.Point(0, 0);
             this.radialgauge1.Name = "radialgauge1";
             this.radialgauge1.Size = new System.Drawing.Size(0, 0);
@@ -65,7 +51,6 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(714, 408);
-            this.Controls.Add(this.radialgauge2);
             this.Controls.Add(this.radialgauge1);
             this.Name = "Form1";
             this.Text = "Form1";
@@ -76,7 +61,6 @@
         #endregion
 
         private Radialgauge.Radialgauge radialgauge1;
-        private Radialgauge.Radialgauge radialgauge2;
     }
 }
 

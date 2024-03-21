@@ -19,16 +19,16 @@ namespace Radialgauge
 
         // Nuevas propiedades decorativas
         private Color _lineColor = Color.Blue;
-        private Color _angleLineColor = Color.Black; // Color predeterminado de la línea del perímetro del ángulo
-        private int _angleLineThickness = 1; // Grosor predeterminado de la línea del perímetro del ángulo
+        private Color _angleLineColor = Color.RoyalBlue; // Color predeterminado de la línea del perímetro del ángulo
+        private int _angleLineThickness = 5; // Grosor predeterminado de la línea del perímetro del ángulo
         private Font _textFont = SystemFonts.DefaultFont;
         private Color _textColor = Color.Black;
-        private int _centralPointRadius = 3; // Radio predeterminado del punto central
-        private Color _centralPointColor = Color.Black; // Color predeterminado del punto central
-        private int _centralLineThickness = 1; // Grosor predeterminado de la línea central
-        private Color _centralLineColor = Color.Black;
+        private int _centralPointRadius = 4; // Radio predeterminado del punto central
+        private Color _centralPointColor = Color.MediumSlateBlue; // Color predeterminado del punto central
+        private int _centralLineThickness = 5; // Grosor predeterminado de la línea central
+        private Color _centralLineColor = Color.MediumOrchid;
         // Nueva propiedad para el color del área dentro del perímetro del ángulo
-        private Color _angleFillColor = Color.Transparent;
+        private Color _angleFillColor = Color.Black;
 
         [Browsable(true)]
         [DefaultValue(typeof(Color), "Transparent")]
