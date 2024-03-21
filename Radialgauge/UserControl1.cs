@@ -81,7 +81,19 @@ namespace Radialgauge
 
             // Dibujar la línea central
             e.Graphics.DrawLine(Pens.Blue, start, end);
+
+            // Dibujar el texto "0" en el extremo izquierdo
+            SizeF textSize = e.Graphics.MeasureString("0", Font);
+            PointF textPositionLeft = new PointF(0, Height / 2 - textSize.Height / 2);
+            e.Graphics.DrawString("0", Font, Brushes.Black, textPositionLeft);
+
+            // Obtener el texto para el extremo derecho basado en el valor máximo
+            string maxValueText = MaxValue.ToString();
+            textSize = e.Graphics.MeasureString(maxValueText, Font);
+            PointF textPositionRight = new PointF(Width - textSize.Width, Height / 2 - textSize.Height / 2);
+            e.Graphics.DrawString(maxValueText, Font, Brushes.Black, textPositionRight);
         }
+
 
         private PointF GetPointOnCircle(float centerX, float centerY, float radius, float angleDegrees)
         {
