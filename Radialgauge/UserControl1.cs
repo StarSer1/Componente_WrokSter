@@ -11,7 +11,7 @@ namespace Radialgauge
     {
         Predeterminado,
         Estilo1,
-        Estilo2,
+        llantaxd,
         // Agrega más estilos según sea necesario
     }
 
@@ -53,6 +53,7 @@ namespace Radialgauge
             }
         }
 
+
         // Método para establecer el estilo según el valor del enumerador
         private void SetStyleFromEnum()
         {
@@ -71,23 +72,50 @@ namespace Radialgauge
                     break;
                 case RadialGaugeStyle.Estilo1:
 
-                    _ColorDelPerimetro = Color.Red;
-                    _AnchoDelPerimetro = 5;
+                    _ColorDelPerimetro = Color.Teal;
+                    _AnchoDelPerimetro = 30;
                     _textColor = Color.Black;
-                    _PuntoCentral = 4;
-                    _ColorDelPuntoCentral = Color.MediumSlateBlue;
+                    _PuntoCentral = 3;
+                    _ColorDelPuntoCentral = Color.DarkSlateGray;
+                    _GrosorDeLineaCentral = 6;
+                    _ColorDeLineaCentral = Color.LightSeaGreen;
+                    _ColorDeFondo = Color.Transparent;
+                    _EstiloDelPerimetro = DashStyle.Custom;
+                    _EstiloDeLineaCentral = CentralLineStyle.Triangular;
+                    break;
+                case RadialGaugeStyle.llantaxd:
+                    _ColorDelPerimetro = Color.FromArgb(34, 141, 184);
+                    _AnchoDelPerimetro = 30;
+                    _textColor = Color.FromArgb(25, 16, 43);
+                    _PuntoCentral = 10;
+                    _ColorDelPuntoCentral = Color.FromArgb(236, 242, 242);
                     _GrosorDeLineaCentral = 5;
-                    _ColorDeLineaCentral = Color.MediumOrchid;
-                    _ColorDeFondo = Color.Black;
-                    _EstiloDelPerimetro = DashStyle.Solid;
+                    _ColorDeLineaCentral = Color.FromArgb(38, 196, 244);
+                    _ColorDeFondo = Color.FromArgb(25, 16, 43);
+                    _EstiloDelPerimetro = DashStyle.Dash;
+                    _EstiloDeLineaCentral = CentralLineStyle.Triangular;
                     break;
-                case RadialGaugeStyle.Estilo2:
-                    // Configura el estilo 2 aquí
-                    break;
-                    // Agrega más casos según sea necesario para otros estilos
             }
         }
+        public enum CentralLineStyle
+        {
+            Rectangular,
+            Triangular
+        }
 
+        private CentralLineStyle _EstiloDeLineaCentral = CentralLineStyle.Rectangular;
+
+        [Browsable(true)]
+        [DefaultValue(CentralLineStyle.Rectangular)]
+        public CentralLineStyle EstiloDeLineaCentral
+        {
+            get { return _EstiloDeLineaCentral; }
+            set
+            {
+                _EstiloDeLineaCentral = value;
+                Invalidate();
+            }
+        }
 
         [Browsable(true)]
         [DefaultValue(DashStyle.Solid)]
@@ -269,28 +297,63 @@ namespace Radialgauge
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
+            // Calcular el tamaño del margen (por ejemplo, el 10% del tamaño del componente)
+            int margin = Math.Min(Width, Height) / 10;
+
+            // Definir el rectángulo del área de dibujo con el margen
+            Rectangle drawingArea = new Rectangle(margin, margin, Width - 2 * margin, Height - 2 * margin);
+
             PointF inicio = new PointF(Width / 2, Height / 2);
-            Rectangle rectangulo = new Rectangle(0, 0, Width - 1, Height - 1);
 
             using (SolidBrush angleFillBrush = new SolidBrush(ColorDeFondo))
             {
-                e.Graphics.FillPie(angleFillBrush, rectangulo, 180, 180);
+                e.Graphics.FillPie(angleFillBrush, drawingArea, 180, 180);
             }
 
             using (Pen angleLinePen = new Pen(ColorDelPerimetro, AnchoDelPerimetro))
             {
-                angleLinePen.DashStyle = EstiloDelPerimetro; 
-                e.Graphics.DrawArc(angleLinePen, rectangulo, 180, 180);
+                angleLinePen.DashStyle = EstiloDelPerimetro;
+                e.Graphics.DrawArc(angleLinePen, drawingArea, 180, 180);
             }
 
             float angulo = 180 - ((float)(_value - MinValue) / (MaxValue - MinValue) * 180);
 
-            PointF fina = ObtnerPuntoEnElCirculo(Width / 2, Height / 2, Width / 2, angulo);
+            PointF fina = ObtnerPuntoEnElCirculo(Width / 2, Height / 2, (Width - 2 * margin) / 2, angulo);
 
             using (Pen centralLinePen = new Pen(ColorDeLineaCentral, GrosorDeLineaCentral))
             {
-                e.Graphics.DrawLine(centralLinePen, inicio, fina);
+                if (EstiloDeLineaCentral == CentralLineStyle.Rectangular)
+                {
+                    // Dibujar la línea central rectangular
+                    e.Graphics.DrawLine(centralLinePen, inicio, fina);
+                }
+                else if (EstiloDeLineaCentral == CentralLineStyle.Triangular)
+                {
+                    // Cálculo de los puntos del triángulo
+                    PointF p1 = fina;
+                    PointF p2 = inicio;
+                    float angleInRadians = (float)((180 - angulo) * Math.PI / 180.0);
+                    float triangleSize = GrosorDeLineaCentral * 2; // Tamaño del triángulo, puedes ajustarlo según sea necesario
+
+                    // Calcular el punto más ancho de la línea central
+                    float widestPointX = p2.X + triangleSize * (float)Math.Cos(angleInRadians);
+                    float widestPointY = p2.Y + triangleSize * (float)Math.Sin(angleInRadians);
+
+                    // Calcular el punto de inicio del triángulo (el más ancho)
+                    PointF startTrianglePoint = new PointF(widestPointX, widestPointY);
+
+                    // Calcular los otros dos puntos del triángulo
+                    PointF p3 = new PointF(p2.X + triangleSize * (float)Math.Cos(angleInRadians + Math.PI / 2), p2.Y + triangleSize * (float)Math.Sin(angleInRadians + Math.PI / 2));
+                    PointF p4 = new PointF(p2.X + triangleSize * (float)Math.Cos(angleInRadians - Math.PI / 2), p2.Y + triangleSize * (float)Math.Sin(angleInRadians - Math.PI / 2));
+
+                    // Dibujar el triángulo
+                    PointF[] trianglePoints = { p1, p3, p4 };
+                    e.Graphics.FillPolygon(new SolidBrush(ColorDeLineaCentral), trianglePoints);
+                }
             }
+
+
 
             Rectangle puntocentreal = new Rectangle((int)inicio.X - PuntoCentral, (int)inicio.Y - PuntoCentral, PuntoCentral * 2, PuntoCentral * 2);
             using (SolidBrush centralPointBrush = new SolidBrush(ColorDelPuntoCentral))
@@ -302,14 +365,15 @@ namespace Radialgauge
 
             using (SolidBrush pincel = new SolidBrush(TextColor))
             {
-                e.Graphics.DrawString(MinValue.ToString(), Font, pincel, 0, Height / 2);
+                e.Graphics.DrawString(MinValue.ToString(), Font, pincel, margin, Height / 2);
             }
 
             using (SolidBrush pincel = new SolidBrush(TextColor))
             {
                 SizeF textSize = e.Graphics.MeasureString(MaxValue.ToString(), Font);
-                e.Graphics.DrawString(MaxValue.ToString(), Font, pincel, Width - textSize.Width, Height / 2);
+                e.Graphics.DrawString(MaxValue.ToString(), Font, pincel, Width - textSize.Width - margin, Height / 2);
             }
+
             string valorDeTexto = _value.ToString();
             SizeF ValorDeTamaño = e.Graphics.MeasureString(valorDeTexto, Font);
             PointF ValorDeUbicacionDelTexto = new PointF(inicio.X - ValorDeTamaño.Width / 2, inicio.Y + PuntoCentral + 5);
@@ -340,10 +404,19 @@ namespace Radialgauge
                 }
             }
             _value = _animationStartValue;
-            this.Invoke((MethodInvoker)delegate
+
+            // Verificar si se necesita una invocación para actualizar la interfaz de usuario
+            if (this.InvokeRequired)
+            {
+                this.Invoke((MethodInvoker)delegate
+                {
+                    Invalidate();
+                });
+            }
+            else
             {
                 Invalidate();
-            });
+            }
         }
 
         // Establecer los valores de iniciales y finales de la animación
