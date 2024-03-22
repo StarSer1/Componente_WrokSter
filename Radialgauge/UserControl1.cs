@@ -7,8 +7,18 @@ using System.Drawing.Drawing2D;
 
 namespace Radialgauge
 {
+    public enum RadialGaugeStyle
+    {
+        Predeterminado,
+        Estilo1,
+        Estilo2,
+        // Agrega más estilos según sea necesario
+    }
+
     public partial class Radialgauge : Control
     {
+        private RadialGaugeStyle _Estilo = RadialGaugeStyle.Predeterminado;
+
         private int _value = 0;
         private int _minValue = 0;
         private int _maxValue = 100;
@@ -28,10 +38,59 @@ namespace Radialgauge
         private int _GrosorDeLineaCentral = 5; 
         private Color _ColorDeLineaCentral = Color.MediumOrchid;
         private Color _ColorDeFondo = Color.Black;
-        private DashStyle _EstiloDelPerimetro = DashStyle.Dash;
+        private DashStyle _EstiloDelPerimetro = DashStyle.Solid;
 
         [Browsable(true)]
-        [DefaultValue(DashStyle.Dash)]
+        [DefaultValue(RadialGaugeStyle.Predeterminado)]
+        public RadialGaugeStyle Estilo
+        {
+            get { return _Estilo; }
+            set
+            {
+                _Estilo = value;
+                SetStyleFromEnum();
+                Invalidate();
+            }
+        }
+
+        // Método para establecer el estilo según el valor del enumerador
+        private void SetStyleFromEnum()
+        {
+            switch (_Estilo)
+            {
+                case RadialGaugeStyle.Predeterminado:
+                    _ColorDelPerimetro = Color.RoyalBlue;
+                    _AnchoDelPerimetro = 5;
+                    _textColor = Color.Black;
+                    _PuntoCentral = 4;
+                    _ColorDelPuntoCentral = Color.MediumSlateBlue;
+                    _GrosorDeLineaCentral = 5;
+                    _ColorDeLineaCentral = Color.MediumOrchid;
+                    _ColorDeFondo = Color.Black;
+                    _EstiloDelPerimetro = DashStyle.Solid;
+                    break;
+                case RadialGaugeStyle.Estilo1:
+
+                    _ColorDelPerimetro = Color.Red;
+                    _AnchoDelPerimetro = 5;
+                    _textColor = Color.Black;
+                    _PuntoCentral = 4;
+                    _ColorDelPuntoCentral = Color.MediumSlateBlue;
+                    _GrosorDeLineaCentral = 5;
+                    _ColorDeLineaCentral = Color.MediumOrchid;
+                    _ColorDeFondo = Color.Black;
+                    _EstiloDelPerimetro = DashStyle.Solid;
+                    break;
+                case RadialGaugeStyle.Estilo2:
+                    // Configura el estilo 2 aquí
+                    break;
+                    // Agrega más casos según sea necesario para otros estilos
+            }
+        }
+
+
+        [Browsable(true)]
+        [DefaultValue(DashStyle.Solid)]
         public DashStyle EstiloDelPerimetro
         {
             get { return _EstiloDelPerimetro; }
