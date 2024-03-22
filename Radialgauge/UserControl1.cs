@@ -7,12 +7,12 @@ using System.Drawing.Drawing2D;
 
 namespace Radialgauge
 {
+    //Agregar estilos al radial gauge
     public enum RadialGaugeStyle
     {
         Predeterminado,
         Estilo1,
         llantaxd,
-        // Agrega más estilos según sea necesario
     }
 
     public partial class Radialgauge : Control
@@ -25,17 +25,17 @@ namespace Radialgauge
         private int _animationStartValue = 0;
         private int _animationEndValue = 0;
         private System.Timers.Timer animationTimer;
-        private int IncrementoDeAnimacion = 2; 
+        private int IncrementoDeAnimacion = 2;
         private int IntervaloDeAnimacion = 50; // Intervalo para la animación de llenado (en milisegundos)
 
         //Propiedades decorativas
-        private Color _ColorDelPerimetro = Color.RoyalBlue; 
-        private int _AnchoDelPerimetro = 5; 
+        private Color _ColorDelPerimetro = Color.RoyalBlue;
+        private int _AnchoDelPerimetro = 5;
         private Font _textFont = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Bold);
         private Color _textColor = Color.Black;
-        private int _PuntoCentral = 4; 
+        private int _PuntoCentral = 4;
         private Color _ColorDelPuntoCentral = Color.MediumSlateBlue;
-        private int _GrosorDeLineaCentral = 5; 
+        private int _GrosorDeLineaCentral = 5;
         private Color _ColorDeLineaCentral = Color.MediumOrchid;
         private Color _ColorDeFondo = Color.Black;
         private DashStyle _EstiloDelPerimetro = DashStyle.Solid;
@@ -52,7 +52,17 @@ namespace Radialgauge
                 Invalidate();
             }
         }
-
+        [Browsable(true)]
+        [DefaultValue(50)] // Valor predeterminado del intervalo de animación en milisegundos
+        public int IntervaloAnimacion
+        {
+            get { return IntervaloDeAnimacion; }
+            set
+            {
+                IntervaloDeAnimacion = value;
+                animationTimer.Interval = IntervaloDeAnimacion;
+            }
+        }
 
         // Método para establecer el estilo según el valor del enumerador
         private void SetStyleFromEnum()
@@ -285,6 +295,7 @@ namespace Radialgauge
             this.SizeChanged += Radialgauge_CambioDeTamaño;
         }
 
+
         // Controlador de eventos para el cambio de tamaño
         private void Radialgauge_CambioDeTamaño(object sender, EventArgs e)
         {
@@ -390,7 +401,6 @@ namespace Radialgauge
             float y = centroY - (float)(radio * Math.Sin(angleRadians));
             return new PointF(x, y);
         }
-
         // Incrementar el valor de progreso para la animación
         private void TemporizadorDeAnimacion(object sender, ElapsedEventArgs e)
         {
@@ -404,19 +414,10 @@ namespace Radialgauge
                 }
             }
             _value = _animationStartValue;
-
-            // Verificar si se necesita una invocación para actualizar la interfaz de usuario
-            if (this.InvokeRequired)
-            {
-                this.Invoke((MethodInvoker)delegate
-                {
-                    Invalidate();
-                });
-            }
-            else
+            this.Invoke((MethodInvoker)delegate
             {
                 Invalidate();
-            }
+            });
         }
 
         // Establecer los valores de iniciales y finales de la animación
@@ -426,5 +427,6 @@ namespace Radialgauge
             _animationEndValue = Value;
             animationTimer.Start();
         }
+
     }
 }
