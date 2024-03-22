@@ -10,14 +10,14 @@ namespace Radialgauge
     //Agregar estilos al radial gauge
     public enum RadialGaugeStyle
     {
-        Predeterminado,
-        Estilo1,
-        llantaxd,
+        Moderno,
+        Clasico,
+        Rustico,
     }
 
     public partial class Radialgauge : Control
     {
-        private RadialGaugeStyle _Estilo = RadialGaugeStyle.Predeterminado;
+        private RadialGaugeStyle _Estilos = RadialGaugeStyle.Moderno;
 
         private int _value = 0;
         private int _minValue = 0;
@@ -41,14 +41,14 @@ namespace Radialgauge
         private DashStyle _EstiloDelPerimetro = DashStyle.Solid;
 
         [Browsable(true)]
-        [DefaultValue(RadialGaugeStyle.Predeterminado)]
+        [DefaultValue(RadialGaugeStyle.Moderno)]
         public RadialGaugeStyle Estilo
         {
-            get { return _Estilo; }
+            get { return _Estilos; }
             set
             {
-                _Estilo = value;
-                SetStyleFromEnum();
+                _Estilos = value;
+                CasosDeEstilos();
                 Invalidate();
             }
         }
@@ -65,11 +65,11 @@ namespace Radialgauge
         }
 
         // Método para establecer el estilo según el valor del enumerador
-        private void SetStyleFromEnum()
+        private void CasosDeEstilos()
         {
-            switch (_Estilo)
+            switch (_Estilos)
             {
-                case RadialGaugeStyle.Predeterminado:
+                case RadialGaugeStyle.Moderno:
                     _ColorDelPerimetro = Color.RoyalBlue;
                     _AnchoDelPerimetro = 5;
                     _textColor = Color.Black;
@@ -80,7 +80,7 @@ namespace Radialgauge
                     _ColorDeFondo = Color.Black;
                     _EstiloDelPerimetro = DashStyle.Solid;
                     break;
-                case RadialGaugeStyle.Estilo1:
+                case RadialGaugeStyle.Clasico:
 
                     _ColorDelPerimetro = Color.Teal;
                     _AnchoDelPerimetro = 30;
@@ -93,7 +93,7 @@ namespace Radialgauge
                     _EstiloDelPerimetro = DashStyle.Custom;
                     _EstiloDeLineaCentral = CentralLineStyle.Triangular;
                     break;
-                case RadialGaugeStyle.llantaxd:
+                case RadialGaugeStyle.Rustico:
                     _ColorDelPerimetro = Color.FromArgb(34, 141, 184);
                     _AnchoDelPerimetro = 30;
                     _textColor = Color.FromArgb(25, 16, 43);
@@ -309,10 +309,7 @@ namespace Radialgauge
         {
             base.OnPaint(e);
 
-            // Calcular el tamaño del margen (por ejemplo, el 10% del tamaño del componente)
             int margin = Math.Min(Width, Height) / 10;
-
-            // Definir el rectángulo del área de dibujo con el margen
             Rectangle drawingArea = new Rectangle(margin, margin, Width - 2 * margin, Height - 2 * margin);
 
             PointF inicio = new PointF(Width / 2, Height / 2);
@@ -336,29 +333,23 @@ namespace Radialgauge
             {
                 if (EstiloDeLineaCentral == CentralLineStyle.Rectangular)
                 {
-                    // Dibujar la línea central rectangular
                     e.Graphics.DrawLine(centralLinePen, inicio, fina);
                 }
                 else if (EstiloDeLineaCentral == CentralLineStyle.Triangular)
                 {
-                    // Cálculo de los puntos del triángulo
                     PointF p1 = fina;
                     PointF p2 = inicio;
                     float angleInRadians = (float)((180 - angulo) * Math.PI / 180.0);
-                    float triangleSize = GrosorDeLineaCentral * 2; // Tamaño del triángulo, puedes ajustarlo según sea necesario
+                    float triangleSize = GrosorDeLineaCentral * 2; 
 
-                    // Calcular el punto más ancho de la línea central
                     float widestPointX = p2.X + triangleSize * (float)Math.Cos(angleInRadians);
                     float widestPointY = p2.Y + triangleSize * (float)Math.Sin(angleInRadians);
 
-                    // Calcular el punto de inicio del triángulo (el más ancho)
                     PointF startTrianglePoint = new PointF(widestPointX, widestPointY);
 
-                    // Calcular los otros dos puntos del triángulo
                     PointF p3 = new PointF(p2.X + triangleSize * (float)Math.Cos(angleInRadians + Math.PI / 2), p2.Y + triangleSize * (float)Math.Sin(angleInRadians + Math.PI / 2));
                     PointF p4 = new PointF(p2.X + triangleSize * (float)Math.Cos(angleInRadians - Math.PI / 2), p2.Y + triangleSize * (float)Math.Sin(angleInRadians - Math.PI / 2));
 
-                    // Dibujar el triángulo
                     PointF[] trianglePoints = { p1, p3, p4 };
                     e.Graphics.FillPolygon(new SolidBrush(ColorDeLineaCentral), trianglePoints);
                 }
