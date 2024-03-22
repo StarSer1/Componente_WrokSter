@@ -1,31 +1,131 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Timers;
+using System.Drawing.Drawing2D;
 
 namespace Radialgauge
 {
-    public partial class Radialgauge:Button
+    //Agregar estilos al radial gauge
+    public enum RadialGaugeStyle
     {
+        Moderno,
+        Clasico,
+        Rustico,
+    }
 
-<<<<<<< Updated upstream
-=======
+    public partial class Radialgauge : Control
+    {
+        private RadialGaugeStyle _Estilos = RadialGaugeStyle.Moderno;
+
+        private int _value = 0;
+        private int _minValue = 0;
+        private int _maxValue = 100;
+        private int _animationStartValue = 0;
+        private int _animationEndValue = 0;
+        private System.Timers.Timer animationTimer;
+        private int IncrementoDeAnimacion = 2;
+        private int IntervaloDeAnimacion = 50; // Intervalo para la animación de llenado (en milisegundos)
+
         //Propiedades decorativas
-        private Color _ColorDelPerimetro = Color.RoyalBlue; 
-        private int _AnchoDelPerimetro = 5; 
+        private Color _ColorDelPerimetro = Color.RoyalBlue;
+        private int _AnchoDelPerimetro = 5;
         private Font _textFont = new Font("Microsoft Sans Serif", 9.75f, FontStyle.Bold);
         private Color _textColor = Color.Black;
-        private int _PuntoCentral = 4; 
+        private int _PuntoCentral = 4;
         private Color _ColorDelPuntoCentral = Color.MediumSlateBlue;
-        private int _GrosorDeLineaCentral = 5; 
+        private int _GrosorDeLineaCentral = 5;
         private Color _ColorDeLineaCentral = Color.MediumOrchid;
         private Color _ColorDeFondo = Color.Black;
         private DashStyle _EstiloDelPerimetro = DashStyle.Solid;
+
+        [Browsable(true)]
+        [DefaultValue(RadialGaugeStyle.Moderno)]
+        public RadialGaugeStyle Estilo
+        {
+            get { return _Estilos; }
+            set
+            {
+                _Estilos = value;
+                CasosDeEstilos();
+                Invalidate();
+            }
+        }
+        [Browsable(true)]
+        [DefaultValue(50)] // Valor predeterminado del intervalo de animación en milisegundos
+        public int IntervaloAnimacion
+        {
+            get { return IntervaloDeAnimacion; }
+            set
+            {
+                IntervaloDeAnimacion = value;
+                animationTimer.Interval = IntervaloDeAnimacion;
+            }
+        }
+
+        // Método para establecer el estilo según el valor del enumerador
+        private void CasosDeEstilos()
+        {
+            switch (_Estilos)
+            {
+                case RadialGaugeStyle.Moderno:
+                    _ColorDelPerimetro = Color.RoyalBlue;
+                    _AnchoDelPerimetro = 5;
+                    _textColor = Color.Black;
+                    _PuntoCentral = 4;
+                    _ColorDelPuntoCentral = Color.MediumSlateBlue;
+                    _GrosorDeLineaCentral = 5;
+                    _ColorDeLineaCentral = Color.MediumOrchid;
+                    _ColorDeFondo = Color.Black;
+                    _EstiloDelPerimetro = DashStyle.Solid;
+                    break;
+                case RadialGaugeStyle.Clasico:
+
+                    _ColorDelPerimetro = Color.Teal;
+                    _AnchoDelPerimetro = 30;
+                    _textColor = Color.Black;
+                    _PuntoCentral = 3;
+                    _ColorDelPuntoCentral = Color.DarkSlateGray;
+                    _GrosorDeLineaCentral = 6;
+                    _ColorDeLineaCentral = Color.LightSeaGreen;
+                    _ColorDeFondo = Color.Transparent;
+                    _EstiloDelPerimetro = DashStyle.Custom;
+                    _EstiloDeLineaCentral = CentralLineStyle.Triangular;
+                    break;
+                case RadialGaugeStyle.Rustico:
+                    _ColorDelPerimetro = Color.FromArgb(34, 141, 184);
+                    _AnchoDelPerimetro = 30;
+                    _textColor = Color.FromArgb(25, 16, 43);
+                    _PuntoCentral = 10;
+                    _ColorDelPuntoCentral = Color.FromArgb(236, 242, 242);
+                    _GrosorDeLineaCentral = 5;
+                    _ColorDeLineaCentral = Color.FromArgb(38, 196, 244);
+                    _ColorDeFondo = Color.FromArgb(25, 16, 43);
+                    _EstiloDelPerimetro = DashStyle.Dash;
+                    _EstiloDeLineaCentral = CentralLineStyle.Triangular;
+                    break;
+            }
+        }
+        public enum CentralLineStyle
+        {
+            Rectangular,
+            Triangular
+        }
+
+        private CentralLineStyle _EstiloDeLineaCentral = CentralLineStyle.Rectangular;
+
+        [Browsable(true)]
+        [DefaultValue(CentralLineStyle.Rectangular)]
+        public CentralLineStyle EstiloDeLineaCentral
+        {
+            get { return _EstiloDeLineaCentral; }
+            set
+            {
+                _EstiloDeLineaCentral = value;
+                Invalidate();
+            }
+        }
 
         [Browsable(true)]
         [DefaultValue(DashStyle.Solid)]
@@ -70,7 +170,7 @@ namespace Radialgauge
             set
             {
                 _minValue = value;
-                Invalidate(); 
+                Invalidate();
             }
         }
 
@@ -82,7 +182,7 @@ namespace Radialgauge
             set
             {
                 _maxValue = value;
-                Invalidate(); 
+                Invalidate();
             }
         }
 
@@ -195,6 +295,7 @@ namespace Radialgauge
             this.SizeChanged += Radialgauge_CambioDeTamaño;
         }
 
+
         // Controlador de eventos para el cambio de tamaño
         private void Radialgauge_CambioDeTamaño(object sender, EventArgs e)
         {
@@ -208,10 +309,7 @@ namespace Radialgauge
         {
             base.OnPaint(e);
 
-            // Calcular el tamaño del margen (por ejemplo, el 10% del tamaño del componente)
             int margin = Math.Min(Width, Height) / 10;
-
-            // Definir el rectángulo del área de dibujo con el margen
             Rectangle drawingArea = new Rectangle(margin, margin, Width - 2 * margin, Height - 2 * margin);
 
             PointF inicio = new PointF(Width / 2, Height / 2);
@@ -233,8 +331,31 @@ namespace Radialgauge
 
             using (Pen centralLinePen = new Pen(ColorDeLineaCentral, GrosorDeLineaCentral))
             {
-                e.Graphics.DrawLine(centralLinePen, inicio, fina);
+                if (EstiloDeLineaCentral == CentralLineStyle.Rectangular)
+                {
+                    e.Graphics.DrawLine(centralLinePen, inicio, fina);
+                }
+                else if (EstiloDeLineaCentral == CentralLineStyle.Triangular)
+                {
+                    PointF p1 = fina;
+                    PointF p2 = inicio;
+                    float angleInRadians = (float)((180 - angulo) * Math.PI / 180.0);
+                    float triangleSize = GrosorDeLineaCentral * 2;
+
+                    float widestPointX = p2.X + triangleSize * (float)Math.Cos(angleInRadians);
+                    float widestPointY = p2.Y + triangleSize * (float)Math.Sin(angleInRadians);
+
+                    PointF startTrianglePoint = new PointF(widestPointX, widestPointY);
+
+                    PointF p3 = new PointF(p2.X + triangleSize * (float)Math.Cos(angleInRadians + Math.PI / 2), p2.Y + triangleSize * (float)Math.Sin(angleInRadians + Math.PI / 2));
+                    PointF p4 = new PointF(p2.X + triangleSize * (float)Math.Cos(angleInRadians - Math.PI / 2), p2.Y + triangleSize * (float)Math.Sin(angleInRadians - Math.PI / 2));
+
+                    PointF[] trianglePoints = { p1, p3, p4 };
+                    e.Graphics.FillPolygon(new SolidBrush(ColorDeLineaCentral), trianglePoints);
+                }
             }
+
+
 
             Rectangle puntocentreal = new Rectangle((int)inicio.X - PuntoCentral, (int)inicio.Y - PuntoCentral, PuntoCentral * 2, PuntoCentral * 2);
             using (SolidBrush centralPointBrush = new SolidBrush(ColorDelPuntoCentral))
@@ -264,7 +385,6 @@ namespace Radialgauge
             }
         }
 
-
         private PointF ObtnerPuntoEnElCirculo(float centroX, float centroY, float radio, float anguloEnGrados)
         {
             float angleRadians = (float)(anguloEnGrados * Math.PI / 180.0);
@@ -272,7 +392,6 @@ namespace Radialgauge
             float y = centroY - (float)(radio * Math.Sin(angleRadians));
             return new PointF(x, y);
         }
-
         // Incrementar el valor de progreso para la animación
         private void TemporizadorDeAnimacion(object sender, ElapsedEventArgs e)
         {
@@ -299,6 +418,6 @@ namespace Radialgauge
             _animationEndValue = Value;
             animationTimer.Start();
         }
->>>>>>> Stashed changes
+
     }
 }
